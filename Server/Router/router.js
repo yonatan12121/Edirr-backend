@@ -31,6 +31,7 @@ route.post('/RequestService', controller.RequestService);
 route.post('/AcceptService', controller.AcceptService);
 route.post('/checkpayment', controller.checkpayment);
 route.post('/login-user', controller.loginUser);
+route.post('/LeaveEdirr', controller.LeaveEdirr);
 route.post('/UpdateBasic', controller.UpdateBasic);
 route.post('/UpdateEmergency', controller.UpdateEmergency);
 route.post('/UpdateAddress', controller.UpdateAddress);

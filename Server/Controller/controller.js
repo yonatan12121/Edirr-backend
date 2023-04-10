@@ -267,8 +267,9 @@ exports.Getedirrho = async (req, res) => {
 
 
   exports.LeaveEdirr = async (req, res) => {
-    const { id, } = req.body;
+    const { id, email } = req.body;
     console.log(id);
+    console.log(email);
     Edirs.updateOne({ _id: id }, { $pull: { Members: { Email: email} } }, (err, doc) => {
       // if (err) return console.log(err);
       if (err) {
@@ -276,7 +277,7 @@ exports.Getedirrho = async (req, res) => {
       }
       else {
 
-        res.status(200).send(data);
+        res.status(200).send(doc);
   
   
       }
@@ -286,7 +287,6 @@ exports.Getedirrho = async (req, res) => {
 
 
 //   )
-  
   
   
   

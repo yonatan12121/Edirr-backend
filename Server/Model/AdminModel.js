@@ -10,10 +10,25 @@ const AdminNotificationScehma = new mongoose.Schema(
     }
   )
   
+  const ReportScehma = new mongoose.Schema(
+    {
+      EdirName:String,
+      EdirrId:String,
+      UserName:String,
+      Report:String,
+      Date:String,
+      Status:{
+        type:String,
+        default:"new"
+      },
+    }
+  )
+
 const AdminScehma = new mongoose.Schema(
     {
       
       Notification:[AdminNotificationScehma],
+      Report:[ReportScehma],
      
       
     },

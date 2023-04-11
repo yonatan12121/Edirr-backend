@@ -38,7 +38,7 @@ route.post('/UpdateAddress', controller.UpdateAddress);
 route.post('/UpdateEducation', controller.UpdateEducation);
 route.post('/UpdateMarital', controller.UpdateMarital);
 route.post('/login-user1', controller.loginUser1);
-
+route.post('/Report',controller.Report);
 
 
 

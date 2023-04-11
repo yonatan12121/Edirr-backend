@@ -285,6 +285,40 @@ exports.Getedirrho = async (req, res) => {
   
   }
 
+  exports.Report = async (req, res) => {
+    console.log("reporting");
+    const { edirrName, id, UserName, Report } = req.body;
+    const now = new Date();
+    const aa = String(now);
+    var bb = aa.split(" ", 4);
+    const today = bb.join();
+    console.log(edirrName, id, UserName, Report, today);
+    // console.log(email);
+    Admin.updateOne( { $push: { Report: { EdirName: edirrName,EdirrId: id,UserName: UserName,Report: Report,Date: today,} } }, (err, doc) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+      else {
+  
+        res.status(200).send(doc);
+  
+  
+      }
+      // Admin.updateOne({ _id: "641b09fbc5dd296cf1c700a7" }, { $push: { Notification: [{   text: Creator+"have created " + NameOfeDirr, Creator:Creator,edirr: NameOfeDirr }] } }, (err, doc) => {
+        //   if (err) return console.log(err);
+      //   console.log("NOtified")
+       
+  
+      
+      
+      
+      
+      // });
+      // if (err) return console.log(err);
+      
+    })
+  }
+
 
 //   )
   

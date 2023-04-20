@@ -9,6 +9,15 @@ const AdminNotificationScehma = new mongoose.Schema(
       edirr:String,
     }
   )
+  const ContactUs = new mongoose.Schema(
+    {
+  
+      Email:String,
+      Subject:String,
+      Message:String,
+      Date:String,
+    }
+  )
   
   const ReportScehma = new mongoose.Schema(
     {
@@ -29,7 +38,7 @@ const AdminScehma = new mongoose.Schema(
       
       Notification:[AdminNotificationScehma],
       Report:[ReportScehma],
-     
+      Contact:[ContactUs]
       
     },
     {

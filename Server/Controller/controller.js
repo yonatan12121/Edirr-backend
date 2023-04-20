@@ -410,6 +410,40 @@ exports.Getedirrho = async (req, res) => {
     })
   }
 
+  exports.Contact = async (req, res) => {
+    console.log("reporting");
+    const { Email, subject, message } = req.body;
+    const now = new Date();
+    const aa = String(now);
+    var bb = aa.split(" ", 4);
+    const today = bb.join();
+    console.log(Email, subject, message, today);
+    // console.log(email);
+    Admin.updateOne( { $push: { Contact: { Email: Email, Subject: subject,Message:message, Date: today,} } }, (err, doc) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+      else {
+  
+        res.status(200).send(doc);
+  
+  
+      }
+      // Admin.updateOne({ _id: "641b09fbc5dd296cf1c700a7" }, { $push: { Notification: [{   text: Creator+"have created " + NameOfeDirr, Creator:Creator,edirr: NameOfeDirr }] } }, (err, doc) => {
+        //   if (err) return console.log(err);
+      //   console.log("NOtified")
+       
+  
+      
+      
+      
+      
+      // });
+      // if (err) return console.log(err);
+      
+    })
+  }
+
 
 //   )
   

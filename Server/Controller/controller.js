@@ -9,7 +9,7 @@ const bcrypt = require("bcryptjs");
 const cors = require("cors");
 app.use(cors());
 var User = require('../model/UserModel');
-var Admin = require('../model/AdminModel');
+var Admin = require('../Model/AdminModel');
 var Edirs = require('../model/model');
 var UserInfo = require('../model/UserInfoModel');
 const jwt = require("jsonwebtoken");
@@ -264,6 +264,84 @@ exports.Getedirrho = async (req, res) => {
     })
   
   }
+  // app.get("/api/forgot-password", 
+  exports.forgotPassword = async (req, res) => {
+    var email =req.query.email;
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.log("User Not found");
+      return res.json({ error: "User Not found" });
+    }
+
+    console.log("forget password");
+    var nodemailer = require("nodemailer");
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "refugee823@gmail.com",
+        pass: "kulwwmpybuhcvfeq",
+      },
+    });
+    console.log("hello",req.query.email);
+    if (req.query.email) {
+      console.log(req.query.email);
+      const forgotPasswordToken = jwt.sign(
+        { userEmail: req.query.email },
+        "Wintu-Yoni@2022",
+        {
+          expiresIn: "4h",
+        }
+      );
+  
+      var forgotPasswordLink =
+        "http://localhost:3000/reset-password/?token=" + forgotPasswordToken;
+      var mailOptions = {
+        from: "valwintina@gmail.com",
+        to: req.query.email,
+        subject: "Reset Password",
+        html:
+          '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' +
+          '<html xmlns="http://www.w3.org/1999/xhtml"><head>' +
+          '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' +
+          "<title>Forgot Password</title>" +
+          "<style> body {background-color: #FFFFFF; padding: 0; margin: 0;}</style></head>" +
+          '<body style="background-color: #FFFFFF; padding: 0; margin: 0;">' +
+          '<table border="0" cellpadding="0" cellspacing="10" height="100%" bgcolor="#FFFFFF" width="100%" style="max-width: 650px;" id="bodyTable">' +
+          '<tr><td align="center" valign="top">' +
+          '<table border="0" cellpadding="0" cellspacing="0" width="100%" id="emailContainer" style="font-family:Arial; color: #333333;">' +
+          '<tr><td align="left" valign="top" colspan="2" style="border-bottom: 1px solid #CCCCCC; padding-  bottom: 10px;">' +
+          "</td></tr><tr>" +
+          '<td align="left" valign="top" colspan="2" style="border-bottom: 1px solid #CCCCCC; padding: 20px 0 10px 0;">' +
+          '<span style="font-size: 18px; font-weight: normal;">FORGOT PASSWORD</span></td></tr><tr>' +
+          '<td align="left" valign="top" colspan="2" style="padding-top: 10px;">' +
+          '<span style="font-size: 12px; line-height: 1.5; color: #333333;">' +
+          " We have sent you this email in response to your request to reset your password on <a href='http://localhost:3000'> Ethioian Refugee Sit</a><br/><br/>" +
+          'To reset your password for, please follow the link below: <a href="' +
+          forgotPasswordLink +
+          '">Reset Password</a><br/><br/>' +
+          "We recommend that you keep your password secure and not share it with anyone.If you didn't request to this message, simply ignore this message.<br/><br/>" +
+          "Ethiopian Refugee Customer Service </span> </td> </tr> </table> </td> </tr> </table> </body></html>",
+      };
+  
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+          return res.json({
+            ErrorMessage: error,
+          });
+        } else {
+          console.log("succcesssss");
+          return res.json({
+            SuccessMessage: "email successfully sent!",
+          });
+        }
+      });
+    } else {
+      return res.json({
+        ErrorMessage: "Email can't be none!",
+      });
+    }
+  };
 
 
   exports.LeaveEdirr = async (req, res) => {
@@ -284,6 +362,19 @@ exports.Getedirrho = async (req, res) => {
     })
   
   }
+
+  exports.ResetPassword = async (req, res)=>{
+    const {newPassword,email}= req.body;
+    console.log(newPassword,email);
+    // Edirs.updateOne({ "NameOfeDirr": edirrName }, { $set: { "Members.$[].Payment": "Payed" } }, (err, doc) => {
+      const encreptedPassword = await bcrypt.hash(newPassword, 10);
+    User.updateOne({"email" : email},{$set : {password:encreptedPassword}}, (err,doc) => {
+      if (err) return console.log(err);
+      return res.json({ doc });
+    })
+    // $elemMatch: { "Creator": email }
+  }
+
 
   exports.Report = async (req, res) => {
     console.log("reporting");
@@ -577,8 +668,7 @@ exports.Getedirrho = async (req, res) => {
     request(options, function (error, response) {
       if (error) throw new Error(error);
       Edirs.updateOne({ "NameOfeDirr": edirrName }, { $set: { "Members.$[].Payment": "Payed" } }, (err, doc) => {
-        if (err) return console.log(err);
-        console.log("payed")
+          
         console.log("chapa said" + response.body);
         const respBody = JSON.parse(response.body);
   
@@ -918,7 +1008,7 @@ exports.Getedirrho = async (req, res) => {
     console.log("emaillll",email);
     const user = await User.findOne({ email });
     const info = await UserInfo.findOne({ email });
-    console.log("emrgency address",info.Emergencyaddress);
+    // console.log("emrgency address",info.Emergencyaddress);
     if (!user) {
       return res.json({ error: "User Not found" });
     }
@@ -926,8 +1016,10 @@ exports.Getedirrho = async (req, res) => {
       const token = jwt.sign({ email: user.email }, JWT_SECRET, {
         expiresIn: "15m",
       });
+
+      // console.log( info.Emergencyaddress);
       var check;
-      if (!info.Emergencyaddress && info.Emergencyaddress == null) {
+      if (info.Emergencyaddress == null && !info.Emergencyaddress  ) {
         check = "notDone";
       } else {
         check = "Done";

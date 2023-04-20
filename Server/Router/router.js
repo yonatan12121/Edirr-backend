@@ -39,8 +39,8 @@ route.post('/UpdateEducation', controller.UpdateEducation);
 route.post('/UpdateMarital', controller.UpdateMarital);
 route.post('/login-user1', controller.loginUser1);
 route.post('/Report',controller.Report);
-
-
+route.get('/api/forgot-password',controller.forgotPassword);
+route.post('/ResetPassword',controller.ResetPassword);
 
 
 module.exports = route

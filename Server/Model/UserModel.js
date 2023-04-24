@@ -17,6 +17,7 @@ const NotificationScehma = new mongoose.Schema(
       cpassword: String,
       Notification:[NotificationScehma],
       role: String,
+      verified:Boolean,
       
     },
     {

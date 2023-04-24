@@ -10,7 +10,7 @@ const AdminNotificationScehma = new mongoose.Schema(
     }
   )
   const ContactUs = new mongoose.Schema(
-    {
+    {  
   
       Email:String,
       Subject:String,

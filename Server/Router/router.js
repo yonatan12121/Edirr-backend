@@ -42,7 +42,7 @@ route.post('/Report',controller.Report);
 route.get('/api/forgot-password',controller.forgotPassword);
 route.post('/Contact',controller.Contact);
 route.post('/ResetPassword',controller.ResetPassword);
-
+route.post('/verified',controller.verified);
 
 
 module.exports = route

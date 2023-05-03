@@ -1129,7 +1129,7 @@ exports.loginUser = async (req, res) => {
     });
 
     // console.log( info.Emergencyaddress);
-    var check;
+    var check; 
     if (user.verified==false) {
       check = "notVerified";
     }

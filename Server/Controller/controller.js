@@ -9,9 +9,11 @@ const cors = require("cors");
 app.use(cors());
 var User = require('../Model/UserModel');
 var Admin = require('../Model/AdminModel');
+
 var Edirs = require('../model/model');
 var UserInfo = require('../model/UserInfoModel');
 const jwt = require("jsonwebtoken");
+const { Job } = require('node-schedule');
 
 const JWT_SECRET = "nhjndshnbhsiduy78q3ye3yhrewhriewopfew[fpe-fpe-pf[df[s;f[ds;f[ds;f[ds;f[ds;,fld,s.mdnshbgvcarfdtwygyqgygdhsabjbcnvgawqrr6t8siahjdvdgvds()!@#$%^&*";
 
@@ -42,6 +44,7 @@ exports.uploads = async (req, res) => {
     console.log(error);
   }
 }
+
 //   )
 // app.get("/img",
 exports.img = async (req, res) => {
@@ -55,7 +58,110 @@ exports.img = async (req, res) => {
       console.log('Failed to retrieve the Course List: ' + err);
     }
   });
+}
+  // exports.test=async()=>{
+  //   var i;
+  // const PaymentDay="11"
+  // // Your code here
+  // const now = new Date();
+  // const aa = String(now);
+  // var bb = aa.split(" ", 4);
+  // const curentpayment = bb[2];
+  // console.log(curentpayment);
+  // const Edir= await Edirs.find({CurrentPaymentDay:curentpayment});
+  // // const users= await User.find();
+  // // console.log(users);
+  // // console.log(Edir[0].Members[0].Email)
+  // var Store = []
+  // Edir.forEach((eDir)=>{
+  //   eDir.Members.forEach((members)=>{
+  //     Store = Store.concat( members.Email)
+  //   })
+  // })
+  // // console.log(Store);
 
+  // Store.forEach(async (eDir) =>{
+  //   const paymentNotification =await Edirs.find({"Members.Email": eDir,"Members.Payment": "Not Payed",CurrentPaymentDay:curentpayment});
+  //   // console.log(paymentNotification);
+  //   paymentNotification.forEach((PN)=>{
+  //     console.log(PN.NameOfeDirr,now,PN.Amount)
+  //     User.updateOne({email:eDir},{$push:{Notification:[{text:"Your monthly payment is due ",edirr:PN.NameOfeDirr,type:"mPayment",Date:now,Payment:PN.Amount}]}},(err,doc)=>{
+  //       if (err) return console.log(err);
+  //       console.log("NOtified")
+  //     });
+  //   })
+  // })
+  // User.updateOne({email:email},{$push:{Notification:[{text:"you have joined "+ edirr,edirr:edirr}]}},(err,doc)=>{
+  //       if (err) return console.log(err);
+  //       console.log("NOtified")
+  //     });
+  // var b=[];
+  // for (i =0 ;i < users.length;i++){
+ 
+  //   b = b.concat(users[i].Members.Email);
+  //   //  console.log(b);
+  // }
+  
+    // console.log(users[);
+   
+
+  
+
+// }
+exports.runOnceADay=async() => {
+ 
+  var i;
+  const PaymentDay="11"
+  // Your code here
+  const now = new Date();
+  const aa = String(now);
+  var bb = aa.split(" ", 4);
+  const curentpayment = bb[2];
+  console.log(curentpayment);
+  const Edir= await Edirs.find({CurrentPaymentDay:curentpayment});
+  // const users= await User.find();
+  // console.log(users);
+  // console.log(Edir[0].Members[0].Email)
+  var Store = []
+  Edir.forEach((eDir)=>{
+    eDir.Members.forEach((members)=>{
+      Store = Store.concat( members.Email)
+    })
+  })
+  // console.log(Store);
+
+  Store.forEach(async (eDir) =>{
+    const paymentNotification =await Edirs.find({"Members.Email": eDir,"Members.Payment": "Not Payed",CurrentPaymentDay:curentpayment});
+    // console.log(paymentNotification);
+    paymentNotification.forEach((PN)=>{
+      console.log(PN.NameOfeDirr,now,PN.Amount)
+      User.updateOne({email:eDir},{$push:{Notification:[{text:"Your monthly payment is due ",edirr:PN.NameOfeDirr,type:"mPayment",Date:now,Payment:PN.Amount}]}},(err,doc)=>{
+        if (err) return console.log(err);
+        console.log("NOtified")
+      });
+    })
+  })
+// 
+// //////////// / /////update the curent payment day by the duration;
+// 
+  // User.updateOne({email:email},{$push:{Notification:[{text:"you have joined "+ edirr,edirr:edirr}]}},(err,doc)=>{
+  //       if (err) return console.log(err);
+  //       console.log("NOtified")
+  //     });
+  // var b=[];
+  // for (i =0 ;i < users.length;i++){
+ 
+  //   b = b.concat(users[i].Members.Email);
+  //   //  console.log(b);
+  // }
+  
+    // console.log(users[);
+   
+
+  
+
+
+  
 }
 //   )
 // app.get("/api/get/payli",
@@ -291,7 +397,7 @@ exports.Getedirr = (req, res) => {
       res.status(200).send(data);
 
     }
-  })
+  }).sort({createdAt: -1})
 
 }
 //   )
@@ -334,6 +440,23 @@ exports.Getedirrho = async (req, res) => {
       res.status(500).send(err);
     }
     else {
+      res.status(200).send(data);
+
+
+    }
+  })
+
+}
+exports.Getedirrname = async (req, res) => {
+  const { edirrName } = req.body;
+  console.log(edirrName);
+  // find({ email: email },
+  Edirs.find( { "NameOfeDirr": edirrName } , (err, data) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+    else {
+      // console.log(data);
       res.status(200).send(data);
 
 
@@ -806,7 +929,7 @@ exports.payment = async (req, res) => {
 exports.checkmonthpayment = async (req, res) => {
   const { email, edirrName, toDay } = req.body;
   console.log("the name is  " + edirrName);
-  const user = await Edirs.findOne({ edirrName });
+  // const user = await Edirs.findOne({ edirrName });
   console.log(toDay);
   // const cursor = db.collection('inventory').find({
   //   instock: { $elemMatch: { qty: 5, warehouse: 'A' } }
@@ -933,38 +1056,81 @@ exports.Join = async (req, res) => {
 }
 //   );
 
+// var i;
+// const PaymentDay="11"
+// // Your code here
+// const now = new Date();
+// const aa = String(now);
+// var bb = aa.split(" ", 4);
+// const curentpayment = bb[2];
+// console.log(curentpayment);
+// const Edir= await Edirs.find({CurrentPaymentDay:curentpayment});
+// // const users= await User.find();
+// // console.log(users);
+// // console.log(Edir[0].Members[0].Email)
+// var Store = []
+// Edir.forEach((eDir)=>{
+//   eDir.Members.forEach((members)=>{
+//     Store = Store.concat( members.Email)
+//   })
+// })
+// // console.log(Store);
+
+// Store.forEach(async (eDir) =>{
+//   const paymentNotification =await Edirs.find({"Members.Email": eDir,"Members.Payment": "Not Payed",CurrentPaymentDay:curentpayment});
+//   // console.log(paymentNotification);
+//   paymentNotification.forEach((PN)=>{
+//     console.log(PN.NameOfeDirr,now,PN.Amount)
+//     User.updateOne({email:eDir},{$push:{Notification:[{text:"Your monthly payment is due ",edirr:PN.NameOfeDirr,type:"mPayment",Date:now,Payment:PN.Amount}]}},(err,doc)=>{
+//       if (err) return console.log(err);
+//       console.log("NOtified")
+//     });
+//   })
+// })
+// // User.updateOne({email:email},{$push:{Notification:[{text:"you have joined "+ edirr,edirr:edirr}]}},(err,doc)=>{
+// //       if (err) return console.log(err);
+// //       console.log("NOtified")
+// //     });
+// // var b=[];
+// // for (i =0 ;i < users.length;i++){
+
+// //   b = b.concat(users[i].Members.Email);
+// //   //  console.log(b);
+// // }
+
+//   // console.log(users[);
+ 
+
+
 
 
 //   app.post("/Accept1", 
 exports.Accept1 = async (req, res) => {
   const { email, edirr, Creator } = req.body;
+
   console.log(Creator);
+   const paymentNotification =await Edirs.find({"Members.Email": email});
+  
   Edirs.updateOne({ NameOfeDirr: edirr }, { $push: { Members: { Email: email, Payment: "Not Payed" } } }, (err, doc) => {
     if (err) return console.log(err);
-    User.updateOne({ email: email }, { $push: { Notification: [{ text: "you have joined " + edirr, edirr: edirr }] } }, (err, doc) => {
+    // User.updateOne({email:eDir},{$push:{Notification:[{text:"Your monthly payment is due ",edirr:PN.NameOfeDirr,type:"mPayment",Date:now,Payment:PN.Amount}]}},(err,doc)=>{
+      // 
+      paymentNotification.forEach((PN)=>{   
+        console.log(PN.NameOfeDirr,PN.Amount);
+    User.updateOne({ email: email }, { $push: { Notification: [{ text: "you have joined please pay your inital payemnt to procced " , edirr:PN.NameOfeDirr,type:"iPayment",Payment:PN.Amount }] } }, (err, doc) => {
       if (err) return console.log(err);
       console.log("NOtified")
+    
       User.updateOne(
         { email: Creator },
         { $pull: { Notification: { name: email } } }, (err, doc) => {
           if (err) return console.log(err);
           console.log("removed the notification")
-
-
-
         })
-
-
-
-
-
     });
+  })
     res.json(doc)
-
   });
-
-
-
 }
 //   );
 

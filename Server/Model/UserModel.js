@@ -5,6 +5,10 @@ const NotificationScehma = new mongoose.Schema(
       text:String,
       name:String,
       edirr:String,
+      type:String,
+      Payment: String, 
+      Date:String,
+      
     }
   )
   const UserDetailsScehma = new mongoose.Schema(

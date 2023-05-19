@@ -51,8 +51,10 @@ const EdirrSchema = new mongoose.Schema(
         Member:[MemberSchema],
         Members:[MemberSchemaa],
         Request:[RequestSchema],
-        MonthlyPayment:[MonthlyPayment]
-      },
+        MonthlyPayment:[MonthlyPayment],
+        CurrentPaymentDay:String
+
+      },{timestamps:true},
 
 
   

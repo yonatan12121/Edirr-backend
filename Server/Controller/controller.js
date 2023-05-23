@@ -70,7 +70,7 @@ exports.img = async (req, res) => {
   // console.log(curentpayment);
   // const Edir= await Edirs.find({CurrentPaymentDay:curentpayment});
   // // const users= await User.find();
-  // // console.log(users);
+  // // console.log(Edir);
   // // console.log(Edir[0].Members[0].Email)
   // var Store = []
   // Edir.forEach((eDir)=>{
@@ -83,14 +83,74 @@ exports.img = async (req, res) => {
   // Store.forEach(async (eDir) =>{
   //   const paymentNotification =await Edirs.find({"Members.Email": eDir,"Members.Payment": "Not Payed",CurrentPaymentDay:curentpayment});
   //   // console.log(paymentNotification);
+  //   var next;
   //   paymentNotification.forEach((PN)=>{
-  //     console.log(PN.NameOfeDirr,now,PN.Amount)
-  //     User.updateOne({email:eDir},{$push:{Notification:[{text:"Your monthly payment is due ",edirr:PN.NameOfeDirr,type:"mPayment",Date:now,Payment:PN.Amount}]}},(err,doc)=>{
-  //       if (err) return console.log(err);
-  //       console.log("NOtified")
-  //     });
+  //     console.log(PN.PaymentDuration)
+      
+  //     if(PN.PaymentDuration==30){
+  //       var newpayment =(parseInt(PN.CurrentPaymentDay) + 30)
+        
+  //       console.log(newpayment);
+  //       if (newpayment>30){
+  //        next = newpayment-30
+  //         console.log(next)
+           
+  //       }
+  //       else{
+  //         next=newpayment;
+  //       }
+  //     }
+  //     else if(PN.PaymentDuration==7){
+  //       console.log("we in 7");
+  //       var newpayment =(parseInt(PN.CurrentPaymentDay) + 7)
+
+  //       console.log(newpayment);
+  //       if (newpayment>30){
+  //         next = newpayment-30
+  //         console.log(next)
+           
+  //       }
+  //       else{
+  //         next=newpayment;
+  //       }
+  //     }else if(PN.PaymentDuration==14){
+  //       var newpayment =(parseInt(PN.CurrentPaymentDay) + 14)
+
+  //       console.log(newpayment);
+  //       if (newpayment>30){
+  //          next = newpayment-30
+  //         console.log(next)
+           
+  //       }
+  //       else{
+  //         next=newpayment;
+  //       }
+  //     }else if(PN.PaymentDuration==21){
+  //       var newpayment =(parseInt(PN.CurrentPaymentDay) + 21)
+
+  //       console.log(newpayment);
+  //       if (newpayment>30){
+  //          next = newpayment-30
+  //         console.log(next)
+           
+  //       }
+  //       else{
+  //         next=newpayment;
+  //       }
+  //     }
+  //     console.log(next);
+  //        Edirs.updateOne( { NameOfeDirr: PN.NameOfeDirr },{ $set: { CurrentPaymentDay: next }},(err,doc)=>{
+  //         if (err) return console.log(err);
+  //         console.log("current payemnt updated ");
+  //       });
+  //     // console.log(PN.NameOfeDirr,now,PN.Amount)
+  //     // User.updateOne({email:eDir},{$push:{Notification:[{text:"Your monthly payment is due ",edirr:PN.NameOfeDirr,type:"mPayment",Date:now,Payment:PN.Amount}]}},(err,doc)=>{
+  //     //   if (err) return console.log(err);
+       
+  //     // });
   //   })
-  // })
+  // }
+  // )
   // User.updateOne({email:email},{$push:{Notification:[{text:"you have joined "+ edirr,edirr:edirr}]}},(err,doc)=>{
   //       if (err) return console.log(err);
   //       console.log("NOtified")
@@ -102,12 +162,15 @@ exports.img = async (req, res) => {
   //   //  console.log(b);
   // }
   
-    // console.log(users[);
+  //   // console.log(users[);
    
 
   
 
 // }
+
+
+
 exports.runOnceADay=async() => {
  
   var i;
@@ -137,7 +200,70 @@ exports.runOnceADay=async() => {
       console.log(PN.NameOfeDirr,now,PN.Amount)
       User.updateOne({email:eDir},{$push:{Notification:[{text:"Your monthly payment is due ",edirr:PN.NameOfeDirr,type:"mPayment",Date:now,Payment:PN.Amount}]}},(err,doc)=>{
         if (err) return console.log(err);
-        console.log("NOtified")
+        console.log("NOtified");
+        var next;
+        paymentNotification.forEach((PN)=>{
+          console.log(PN.PaymentDuration)
+          
+          if(PN.PaymentDuration==30){
+            var newpayment =(parseInt(PN.CurrentPaymentDay) + 30)
+            
+            console.log(newpayment);
+            if (newpayment>30){
+             next = newpayment-30
+              console.log(next)
+               
+            }
+            else{
+              next=newpayment;
+            }
+          }
+          else if(PN.PaymentDuration==7){
+            console.log("we in 7");
+            var newpayment =(parseInt(PN.CurrentPaymentDay) + 7)
+    
+            console.log(newpayment);
+            if (newpayment>30){
+              next = newpayment-30
+              console.log(next)
+               
+            }
+            else{
+              next=newpayment;
+            }
+          }else if(PN.PaymentDuration==14){
+            var newpayment =(parseInt(PN.CurrentPaymentDay) + 14)
+    
+            console.log(newpayment);
+            if (newpayment>30){
+               next = newpayment-30
+              console.log(next)
+               
+            }
+            else{
+              next=newpayment;
+            }
+          }else if(PN.PaymentDuration==21){
+            var newpayment =(parseInt(PN.CurrentPaymentDay) + 21)
+    
+            console.log(newpayment);
+            if (newpayment>30){
+               next = newpayment-30
+              console.log(next)
+               
+            }
+            else{
+              next=newpayment;
+            }
+          }
+          console.log(next);
+             Edirs.updateOne( { NameOfeDirr: PN.NameOfeDirr },{ $set: { CurrentPaymentDay: next }},(err,doc)=>{
+              if (err) return console.log(err);
+              console.log("current payemnt updated ");
+            });
+         
+        })
+      
       });
     })
   })
@@ -226,7 +352,7 @@ exports.register = async (req, res) => {
       );
 
       var forgotPasswordLink =
-        "http://localhost:3000/reset-password/?token=" + forgotPasswordToken;
+        "http://localhost:3000/login/?token=" + forgotPasswordToken;
       var mailOptions = {
         from: "valwintina@gmail.com",
         to: email,
@@ -263,8 +389,14 @@ exports.register = async (req, res) => {
           });
         } else {
           console.log("succcesssss");
+          User.updateOne({ "email": email }, { $set: { verified: true } }, (err, doc) => {
+            if (err) return console.log(err);
+            // return res.json({ doc });
+          console.log("verifyed successfully");
+          })
           return res.json({
             SuccessMessage: "email successfully sent!",
+
           });
         }
       });

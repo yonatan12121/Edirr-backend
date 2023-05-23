@@ -10,9 +10,10 @@ app.use(bodyparser.urlencoded({ extended : true}))
 
 const connectDB = require('./server/database/connection');
 const schedule = require('node-schedule');
-const { runOnceADay } = require('./Server/Controller/controller');
+const { runOnceADay,test } = require('./Server/Controller/controller');
+  //  test();
 
-  schedule.scheduleJob ('57 9 * * *'   ,runOnceADay
+  schedule.scheduleJob ('41 14 * * *'   ,runOnceADay
 
 
 );

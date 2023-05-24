@@ -1239,16 +1239,16 @@ exports.Join = async (req, res) => {
 //   app.post("/Accept1", 
 exports.Accept1 = async (req, res) => {
   const { email, edirr, Creator } = req.body;
-
+  console.log("acccept111");
   console.log(Creator);
    const paymentNotification =await Edirs.find({"Members.Email": email});
   
   Edirs.updateOne({ NameOfeDirr: edirr }, { $push: { Members: { Email: email, Payment: "Not Payed" } } }, (err, doc) => {
     if (err) return console.log(err);
     // User.updateOne({email:eDir},{$push:{Notification:[{text:"Your monthly payment is due ",edirr:PN.NameOfeDirr,type:"mPayment",Date:now,Payment:PN.Amount}]}},(err,doc)=>{
-      // 
+      //  
       paymentNotification.forEach((PN)=>{   
-        console.log(PN.NameOfeDirr,PN.Amount);
+        console.log("payment notification",PN.NameOfeDirr,PN.Amount);
     User.updateOne({ email: email }, { $push: { Notification: [{ text: "you have joined please pay your inital payemnt to procced " , edirr:PN.NameOfeDirr,type:"iPayment",Payment:PN.Amount }] } }, (err, doc) => {
       if (err) return console.log(err);
       console.log("NOtified")
@@ -1321,6 +1321,7 @@ exports.AcceptService = async (req, res) => {
 
   };
   //  Edirs.updateOne({NameOfeDirr: edirr},{$push:{Members:{Email:email,Payment:"Not Payed"}}},(err,doc)=>{
+    var request = require('request');
   request(options, function (error, response) {
     if (error) throw new Error(error);
     Edirs.updateOne({ "NameOfeDirr": Edirr, "Request.$[].Email": Email }, { $set: { "Request.$[].Payment": "Payed" } }, (err, doc) => {

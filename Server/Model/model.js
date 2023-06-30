@@ -3,8 +3,6 @@ const mongoose= require("mongoose");
 
 
 
-
-
 const MemberSchema = new mongoose.Schema({
   Email:String,
 });

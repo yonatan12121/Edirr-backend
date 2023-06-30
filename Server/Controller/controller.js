@@ -18,19 +18,7 @@ const { Job } = require('node-schedule');
 const JWT_SECRET = "nhjndshnbhsiduy78q3ye3yhrewhriewopfew[fpe-fpe-pf[df[s;f[ds;f[ds;f[ds;f[ds;,fld,s.mdnshbgvcarfdtwygyqgygdhsabjbcnvgawqrr6t8siahjdvdgvds()!@#$%^&*";
 
 
-// app.get('/', (req, res) => {
-//     try {
-//       Post.find({}).then(data => {
-//         res.json(data)
-//       }).catch(error => {
-//         res.status(408).json({ error })
-//       })
-//     } catch (error) {
-//       res.json({ error })
-//     }
-//   })
 
-//   app.post("/uploads",
 
 exports.uploads = async (req, res) => {
   console.log("we are in upload");
@@ -45,8 +33,7 @@ exports.uploads = async (req, res) => {
   }
 }
 
-//   )
-// app.get("/img",
+
 exports.img = async (req, res) => {
   console.log("we are fetching the images");
   Post.find((err, docs) => {
@@ -326,9 +313,7 @@ exports.register = async (req, res) => {
     });
 
     console.log("success");
-    await UserInfo.create({
-      email
-    });
+   
 
     // this is where email verification is done
     console.log("forget password");
@@ -535,7 +520,7 @@ exports.Getedirr = (req, res) => {
 //   )
 //   app.get("/Getuser",
 exports.Getuser = async (req, res) => {
-  UserInfo.find((err, data) => {
+  User.find((err, data) => {
     if (err) {
       res.status(500).send(err);
     }
@@ -564,21 +549,21 @@ exports.Getuser = async (req, res) => {
 
 // ({Members:{$elemMatch: {"Email":email}}}
 //   app.post("/Getedirrho", 
-exports.Getedirrho = async (req, res) => {
-  const { email } = req.body;
-  console.log(email);
-  Edirs.find({ Members: { $elemMatch: { "Email": email } } }, (err, data) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    else {
-      res.status(200).send(data);
+// exports.Getedirrho = async (req, res) => {
+//   const { email } = req.body;
+//   console.log(email);
+//   Edirs.find({ Members: { $elemMatch: { "Email": email } } }, (err, data) => {
+//     if (err) {
+//       res.status(500).send(err);
+//     }
+//     else {
+//       res.status(200).send(data);
 
 
-    }
-  })
+//     }
+//   })
 
-}
+// }
 exports.Getedirrname = async (req, res) => {
   const { edirrName } = req.body;
   console.log(edirrName);
@@ -922,73 +907,24 @@ exports.Getedirrs = async (req, res) => {
 //   app.post("/profile", 
 exports.profile = async (req, res) => {
 
-  // console.log(password);
-  // console.log(email);
-  // const user = await User.findOne({ email });
+  
   const { email } = req.body;
-  const info = await UserInfo.findOne({ email });
-  var nation = info.nation;
-  var firstName = info.firstName;
-  var lastName = info.lastName;
-  var dateOfBirth = info.dateOfBirth;
-  var gender = info.gender;
-  var image = info.myFile;
-  var city = info.city;
-  var subCity = info.subCity;
-  var wereda = info.wereda;
-  var kebele = info.kebele;
-  var houseNumber = info.houseNumber;
-  var phoneNumber = info.phoneNumber;
-  var level = info.level; var position = info.position;
-  var institution = info.institution;
-  var place = info.place;
-  var certificate = info.certificate;
-  var workId = info.workId;
-  var title = info.title;
-  var partner = info.partner;
-  var parent_po_no = info.parent_po_no;
-  var parent_address = info.parent_address;
-  var childName = info.childName;
-  var childGender = info.childGender;
-  var childAge = info.childAge;
-  var emergency_contact = info.emergency_contact;
-  var relationship = info.relationship;
-  var EmergencyPhoneNo = info.EmergencyPhoneNo;
-  var Emergencyaddress = info.Emergencyaddress;
-  // console.log("wewewe"+nation);
-  return res.json({
-    status: "ok", nation, email,
-    firstName,
-    lastName,
-    dateOfBirth,
-    nation,
-    gender,
-    image,
-    city,
-    subCity,
-    wereda,
-    kebele,
-    houseNumber,
-    phoneNumber,
-    level,
-    position,
-    institution,
-    place,
-    certificate,
-    workId,
-    title,
-    partner,
-    parent_po_no,
-    parent_address,
-    childName,
-    childGender,
-    childAge,
-    emergency_contact,
-    relationship,
-    EmergencyPhoneNo,
-    Emergencyaddress,
-  });
+  
+  // const info = await User.findOne({ email });
+  
 
+  try {
+    const info = await User.findOne({ email });
+    if (info) {
+      res.json({ status: "ok", info });
+      console.log(info);
+    } else {
+      res.json({ status: "error", message: "Email not found" });
+    }
+  } catch (err) {
+    res.send({ error: err.message });
+    console.log(err.message);
+  }
 }
 //   );
 
@@ -1417,45 +1353,61 @@ exports.loginUser = async (req, res) => {
   console.log(req.body);
   console.log("emaillll", 0);
   const user = await User.findOne({ email });
-  const info = await UserInfo.findOne({ email });
-  // console.log("emrgency address",info.Emergencyaddress);
+
   if (!user) {
     return res.json({ error: "User Not found" });
   }
+
   if (await bcrypt.compare(password, user.password)) {
     const token = jwt.sign({ email: user.email }, JWT_SECRET, {
       expiresIn: "15m",
     });
 
-    // console.log( info.Emergencyaddress);
-    var check; 
-    if (user.verified==false) {
+    var check;
+
+    if (user.verified == false) {
       check = "notVerified";
+      console.log(check);
+    }
+    else {
+      console.log("are we here");
+      if (user.UserInformation.length===0){
+        check = "notDone";
+      }else{
+      for (let i = 0; i < user.UserInformation.length; i++) {
+        if (user.UserInformation[i].Emergencyaddress === null || !user.UserInformation[i].Emergencyaddress) {
+          // Emergency address is null or falsy for this element
+          check = "notDone";
+          console.log("Emergency address is null or falsy for userinfo element at index", i);
+          break; // Exit the loop after the first iteration
+        }
+        else {
+          check = "Done";
+        }
+      console.log("Check:", check);
+
+      }
+    }
+      console.log("Check:", check);
     }
 
-   else if (info.Emergencyaddress == null && !info.Emergencyaddress) {
-      check = "notDone";
-    } else {
-      check = "Done";
-    }
+    const role = user.role;
+    const fullName = user.fullName;
 
     if (res.status(201)) {
-      const email = user.email;
-      const password = user.password;
-      console.log(email);
-      const role = user.role;
-      const fullName = user.fullName;
       if (role == "user") {
-        console.log(check);
         return res.json({ status: "ok", role: "user", email, password, fullName, check, data: token });
-      } if (role == "admin") {
+      }
+      if (role == "admin") {
         return res.json({ status: "ok", role: "admin", data: token });
       }
-    } else {
+    }
+    else {
       return res.json({ error: "error" });
     }
   }
-  res.json({ status: "error", error: "InvAlid Password" });
+
+  res.json({ status: "error", error: "Invalid Password" });
 }
 //   );
 
